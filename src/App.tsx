@@ -1,10 +1,20 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
-import { deleteAccount, login, logout, register } from './controller/user.controller';
+import { deleteAccount, getUserById, login, logout, register, updateUser, updateUserEmail } from './controller/user.controller';
+import User from './models/user.model';
 
+/**
+ * todo (raphpion) User Read/Update broke the login flow
+ * 
+ * Todo (raphpion) Fix this warning:
+ * 
+ * `react-dom.development.js:86 Warning: A component is changing an uncontrolled input to be controlled. This is likely caused
+ * by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or 
+ * uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components`
+ */
 function App() {
-  const [user, setUser] = useState(auth.currentUser);
+  const [user, setUser] = useState<User | null>(null);
 
   const [formAction, setFormAction] = useState('login');
   const [formEmail, setFormEmail] = useState('');
@@ -13,10 +23,17 @@ function App() {
   const [formLastName, setFormLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  auth.onAuthStateChanged((authUser) => {
-    if (authUser === user) return;
-    setUser(authUser);
-  });
+  useEffect(() => {
+    auth.onAuthStateChanged(async (authUser) => {
+      const userTemp = authUser ? await getUserById(authUser.uid) : null;
+      setUser(userTemp);
+      setFormEmail(userTemp ? userTemp.email : '');
+      setFormPassword('');
+      setFormFirstName(userTemp ? userTemp.firstName : '');
+      setFormLastName(userTemp ? userTemp.lastName : '');
+    });
+  }, []);
+
 
   const handleClickRegister = async () => {
     await register(formEmail, formPassword, formFirstName, formLastName);
@@ -24,10 +41,22 @@ function App() {
 
   const handleClickLogin = async () => {
     await login(formEmail, formPassword);
-  }
+  };
 
   const handleClickLogout = async () => {
     await logout();
+  };
+
+  const handleClickUpdateEmail = async () => {
+    if (!user) return;
+    const updatedUser = await updateUserEmail(formEmail);
+    setUser(updatedUser);
+  };
+
+  const handleClickUpdateName = async () => {
+    if (!user) return;
+    const updatedUser = await updateUser(user.id, { firstName: formFirstName, lastName: formLastName });
+    setUser(updatedUser);
   }
 
   const handleClickDeleteAccount = async () => {
@@ -40,8 +69,24 @@ function App() {
   return <div className="App">
     {user
       ? <>
-        <h1>Welcome!</h1>
-        <p>{user.email}</p>
+        <h1>Welcome, {user.firstName}!</h1>
+        <p>
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" onChange={(event) => setFormEmail(event.target.value)} />
+          <button type="button" onClick={handleClickUpdateEmail}>Update</button>
+        </p>
+        <p>
+          <label htmlFor="password">Password</label>
+          <input id="password" type={showPassword ? "text" : "password"} onChange={(event) => setFormPassword(event.target.value)} />
+          <button type="button" onClick={() => setShowPassword(!showPassword)}>{showPassword ? "Hide" : "Show"}</button>
+        </p>
+        <p>
+          <label htmlFor="first-name">First name</label>
+          <input value={formFirstName} id="first-name" type="text" onChange={(event) => setFormFirstName(event.target.value)} />
+          <label htmlFor="last-name">Last name</label>
+          <input value={formLastName} id="last-name" type="text" onChange={(event) => setFormLastName(event.target.value)} />
+          <button type="button" onClick={handleClickUpdateName}>Update</button>
+        </p>
         <p><button onClick={handleClickLogout}>Logout</button></p>
         <p><button onClick={handleClickDeleteAccount}>Delete account</button></p>
       </>

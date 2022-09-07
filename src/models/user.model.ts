@@ -1,3 +1,8 @@
+interface UpdateUserPayload {
+  firstName?: string;
+  lastName?: string;
+}
+
 interface User {
   id: string;
   email: string;
@@ -6,3 +11,4 @@ interface User {
 }
 
 export default User;
+export type { UpdateUserPayload };
