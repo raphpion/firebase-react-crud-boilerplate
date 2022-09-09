@@ -2,7 +2,8 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
 import { deleteAccount, getUserById, login, logout, register, updateUser, updateUserEmail } from './controllers/user.controller';
-import User from './models/user.model';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { setUser } from './slices/user.slice';
 
 /**
  * todo (raphpion) User Read/Update broke the login flow
@@ -13,8 +14,9 @@ import User from './models/user.model';
  * by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or 
  * uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components`
  */
-function App() {
-  const [user, setUser] = useState<User | null>(null);
+const App: React.FC = () => {
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
 
   const [formAction, setFormAction] = useState('login');
   const [formEmail, setFormEmail] = useState('');
@@ -25,14 +27,14 @@ function App() {
 
   useEffect(() => {
     auth.onAuthStateChanged(async (authUser) => {
-      const userTemp = authUser ? await getUserById(authUser.uid) : null;
-      setUser(userTemp);
-      setFormEmail(userTemp ? userTemp.email : '');
-      setFormPassword('');
-      setFormFirstName(userTemp ? userTemp.firstName : '');
-      setFormLastName(userTemp ? userTemp.lastName : '');
+      if (authUser === null) {
+        dispatch(setUser(null));
+        return;
+      }
+      const appUser = await getUserById(authUser.uid);
+      dispatch(setUser(appUser));
     });
-  }, []);
+  }, [dispatch]);
 
 
   const handleClickRegister = async () => {

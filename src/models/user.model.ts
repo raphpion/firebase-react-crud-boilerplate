@@ -10,5 +10,9 @@ interface User {
   lastName: string;
 }
 
+interface UserSlice {
+  user: User | null;
+}
+
 export default User;
-export type { UpdateUserPayload };
+export type { UpdateUserPayload, UserSlice };
