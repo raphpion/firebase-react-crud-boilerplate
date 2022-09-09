@@ -1,0 +1,20 @@
+{
+  "restoreTerminals.terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "emulators",
+          "commands": ["firebase emulators:start --import /saved-data --export-on-exit /saved-data"]
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "react start",
+          "commands": ["yarn start"]
+        }
+      ]
+    }
+  ]
+}
