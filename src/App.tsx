@@ -1,7 +1,7 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { auth } from './firebaseConfig';
-import { deleteAccount, getUserById, login, logout, register, updateUser, updateUserEmail } from './controller/user.controller';
+import { deleteAccount, getUserById, login, logout, register, updateUser, updateUserEmail } from './controllers/user.controller';
 import User from './models/user.model';
 
 /**
