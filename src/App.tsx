@@ -26,6 +26,7 @@ const App: React.FC = () => {
     });
   }, [dispatch]);
 
+
   return <div className="App">
     <ul>
       <li><NavLink to="/">Home</NavLink></li>
