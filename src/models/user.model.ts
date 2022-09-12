@@ -1,13 +1,10 @@
-interface UpdateUserPayload {
-  firstName?: string;
-  lastName?: string;
-}
+interface UpdateUserPayload {}
 
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  displayName: string | null;
+  photoURL: string | null;
 }
 
 interface UserSlice {

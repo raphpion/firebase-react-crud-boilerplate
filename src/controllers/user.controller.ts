@@ -1,13 +1,11 @@
 import { auth, db } from '../firebaseConfig';
-import { createUserWithEmailAndPassword, deleteUser, updateEmail, signInWithEmailAndPassword, signOut, updatePassword } from 'firebase/auth';
+import { signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
 import User, { UpdateUserPayload } from '../models/user.model';
 
-export async function deleteAccount(): Promise<void> {
-  const currentUser = auth.currentUser;
-  if (!currentUser) throw new Error('There is no currently authenticated User!');
-  await deleteDoc(doc(db, 'users', currentUser.uid));
-  await deleteUser(currentUser);
+export async function getCurrentUser(): Promise<User | null> {
+  if (!auth.currentUser) return null;
+  return getUserById(auth.currentUser.uid);
 }
 
 export async function getUserById(id: string): Promise<User | null> {
@@ -17,19 +15,26 @@ export async function getUserById(id: string): Promise<User | null> {
   return docSnap.data() as User;
 }
 
-export async function login(email: string, password: string): Promise<void> {
-  await signInWithEmailAndPassword(auth, email, password);
+export async function createUser(): Promise<User> {
+  const authUser = auth.currentUser;
+  if (!authUser) throw new Error('There is no current User!');
+  const user = await getUserById(authUser.uid);
+  if (user) throw new Error('User already exists!');
+  const newUser: User = {
+    id: authUser.uid,
+    email: authUser.uid,
+    displayName: authUser.displayName,
+    photoURL: authUser.photoURL,
+  };
+  await setDoc(doc(db, 'users', newUser.id), newUser);
+  return newUser;
 }
 
-export async function logout(): Promise<void> {
-  return signOut(auth);
-}
-
-export async function register(email: string, password: string, firstName: string, lastName: string): Promise<User> {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = { id: userCredential.user.uid, email, firstName, lastName } as User;
-  await setDoc(doc(db, 'users', user.id), user);
-  return user;
+export async function deleteUser(): Promise<void> {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) throw new Error('There is no User to delete!');
+  const docRef = doc(db, 'users', currentUser.id);
+  return deleteDoc(docRef);
 }
 
 export async function updateUser(id: string, payload: UpdateUserPayload): Promise<User> {
@@ -41,21 +46,12 @@ export async function updateUser(id: string, payload: UpdateUserPayload): Promis
   return updatedUser;
 }
 
-export async function updateUserEmail(email: string): Promise<User> {
-  const currentUser = auth.currentUser;
-  if (!currentUser) throw new Error('There is no currently authenticated User!');
-
-  const user = await getUserById(currentUser.uid);
-  if (!user) throw new Error('User is not found!');
-
-  await updateEmail(currentUser, email);
-  const updatedUser = { ...user, email };
-  await setDoc(doc(db, 'users', user.id), updatedUser);
-  return updatedUser;
+export async function login(): Promise<User | null> {
+  const userCredential = await signInWithPopup(auth, new GoogleAuthProvider());
+  const authUser = userCredential.user;
+  return getUserById(authUser.uid);
 }
 
-export async function updateUserPassword(password: string): Promise<void> {
-  const currentUser = auth.currentUser;
-  if (!currentUser) throw new Error('There is no currently authenticated User!');
-  await updatePassword(currentUser, password);
+export async function logout(): Promise<void> {
+  return signOut(auth);
 }
