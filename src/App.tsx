@@ -3,13 +3,13 @@ import { auth } from './firebaseConfig';
 import { createUser, getUserById, login, logout } from './controllers/user.controller';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setUser } from './slices/user.slice';
-import { Link, Navigate, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Avatar from './components/Avatar';
 
 const App: React.FC = () => {
