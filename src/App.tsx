@@ -1,13 +1,14 @@
-import './App.css';
 import { useEffect } from 'react';
 import { auth } from './firebaseConfig';
 import { createUser, getUserById, login, logout } from './controllers/user.controller';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setUser } from './slices/user.slice';
-import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -52,7 +53,6 @@ const App: React.FC = () => {
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
     </Routes>
   </div>;
