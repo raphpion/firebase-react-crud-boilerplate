@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { deleteUser, logout } from "../controllers/user.controller";
 import { useAppSelector } from "../hooks"
@@ -16,10 +17,10 @@ const Profile: React.FC = () => {
     if (!user) return navigate('/');
   }, [user, navigate]);
 
-  return (<>
+  return (<Container>
     <h1>Your Profile</h1>
-    <p><button onClick={handleDeleteAccount}>Delete account</button></p>
-  </>);
+    <p><Button variant="danger" onClick={handleDeleteAccount}>Delete account</Button></p>
+  </Container>);
 }
 
 export default Profile;

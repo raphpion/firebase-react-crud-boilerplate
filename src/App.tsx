@@ -3,12 +3,14 @@ import { auth } from './firebaseConfig';
 import { createUser, getUserById, login, logout } from './controllers/user.controller';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setUser } from './slices/user.slice';
-import { Navigate, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
+import { Link, Navigate, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Container } from 'react-bootstrap';
+import Avatar from './components/Avatar';
 
 const App: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -36,20 +38,22 @@ const App: React.FC = () => {
 
 
   return <div className="App">
-    <ul>
-      <li><NavLink to="/">Home</NavLink></li>
-      {user
-        ? <>
-          <li>
-            <NavLink to="/profile">
-              {user.photoURL && <img referrerPolicy="no-referrer" src={user.photoURL} alt="avatar" />}
-              {user.displayName}
-            </NavLink>
-          </li>
-          <li><button type="button" onClick={logout}>Logout</button></li>
-        </>
-        : <li><button type="button" onClick={handleLogin}>Login</button></li>}
-    </ul>
+    <Container>
+      <ul>
+        <li><NavLink to="/">Home</NavLink></li>
+        {user
+          ? <>
+            <li>
+              <NavLink to="/profile">
+                <Avatar size={32} />
+                {user.displayName}
+              </NavLink>
+            </li>
+            <li><Link to="#" onClick={logout}>Logout</Link></li>
+          </>
+          : <li><Link to="#" onClick={handleLogin}>Login</Link></li>}
+      </ul>
+    </Container>
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
