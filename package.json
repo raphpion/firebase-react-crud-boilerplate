@@ -1,6 +1,7 @@
 {
   "name": "firebase-react-crud-boilerplate",
   "version": "0.1.0",
+  "license": "mit",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
