@@ -1,12 +1,10 @@
 import './App.css';
 import { useEffect } from 'react';
 import { auth } from './firebaseConfig';
-import { getUserById } from './controllers/user.controller';
+import { createUser, getUserById, login, logout } from './controllers/user.controller';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setUser } from './slices/user.slice';
-import { NavLink, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import { NavLink, Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
@@ -14,6 +12,15 @@ import Profile from './pages/Profile';
 const App: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    const userTemp = await login();
+    if (userTemp) return;
+    const newUser = await createUser();
+    dispatch(setUser(newUser));
+    navigate('/profile');
+  };
 
   useEffect(() => {
     auth.onAuthStateChanged(async (authUser) => {
@@ -30,15 +37,22 @@ const App: React.FC = () => {
   return <div className="App">
     <ul>
       <li><NavLink to="/">Home</NavLink></li>
-      <li>{user ? <NavLink to="/profile">Profile</NavLink>
-        : <NavLink to="/login">Login</NavLink>}</li>
+      {user
+        ? <>
+          <li>
+            <NavLink to="/profile">
+              {user.photoURL && <img referrerPolicy="no-referrer" src={user.photoURL} alt="avatar" />}
+              {user.displayName}
+            </NavLink>
+          </li>
+          <li><button type="button" onClick={logout}>Logout</button></li>
+        </>
+        : <li><button type="button" onClick={handleLogin}>Login</button></li>}
     </ul>
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
       <Route path="/profile" element={<Profile />} />
     </Routes>
   </div>;

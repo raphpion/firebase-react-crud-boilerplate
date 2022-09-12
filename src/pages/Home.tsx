@@ -4,7 +4,7 @@ const Home: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
 
   return (<>
-    <h1>{user ? `Welcome, ${user.firstName}!` : 'Welcome!'}</h1>
+    <h1>{user ? `Welcome, ${user.displayName}!` : 'Welcome!'}</h1>
   </>)
 };
 
