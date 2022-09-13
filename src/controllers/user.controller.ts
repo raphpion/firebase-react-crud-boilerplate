@@ -1,7 +1,7 @@
-import { auth, db } from '../firebaseConfig';
-import { signOut, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth, db, provider } from '../firebaseConfig';
 import { doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
 import User, { UpdateUserPayload } from '../models/user.model';
+import { signInWithPopup, signOut } from 'firebase/auth';
 
 export async function getCurrentUser(): Promise<User | null> {
   if (!auth.currentUser) return null;
@@ -47,7 +47,7 @@ export async function updateUser(id: string, payload: UpdateUserPayload): Promis
 }
 
 export async function login(): Promise<User | null> {
-  const userCredential = await signInWithPopup(auth, new GoogleAuthProvider());
+  const userCredential = await signInWithPopup(auth, provider);
   const authUser = userCredential.user;
   return getUserById(authUser.uid);
 }
