@@ -8,9 +8,8 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container } from 'react-bootstrap';
 import Avatar from './components/Avatar';
+import Container from '@mui/material/Container';
 
 const App: React.FC = () => {
   const user = useAppSelector((state) => state.user.user);
