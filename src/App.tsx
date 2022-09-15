@@ -1,65 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { auth } from './firebaseConfig';
-import { createUser, getUserById, login, logout } from './controllers/user.controller';
-import { useAppDispatch, useAppSelector } from './hooks';
+import { createUser, getUserById } from './controllers/user.controller';
+import { useAppDispatch } from './hooks';
 import { setUser } from './slices/user.slice';
-import { Link, NavLink, Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container } from 'react-bootstrap';
-import Avatar from './components/Avatar';
+import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material';
+import { getDefaultTheme } from './theme/default.theme';
+import Navbar from './components/Navbar';
+import './theme/default.style.css';
 
 const App: React.FC = () => {
-  const user = useAppSelector((state) => state.user.user);
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const theme = useMemo(() => getDefaultTheme(prefersDarkMode ? 'dark' : 'light'), [prefersDarkMode]);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    const userTemp = await login();
-    if (userTemp) return;
-    const newUser = await createUser();
-    dispatch(setUser(newUser));
-    navigate('/profile');
-  };
 
   useEffect(() => {
     auth.onAuthStateChanged(async (authUser) => {
-      if (authUser === null) {
-        dispatch(setUser(null));
-        return;
-      }
-      const appUser = await getUserById(authUser.uid);
-      dispatch(setUser(appUser));
+      if (authUser) {
+        let appUser = await getUserById(authUser.uid);
+        if (!appUser) appUser = await createUser(authUser);
+        dispatch(setUser(appUser));
+      } else dispatch(setUser(null));
     });
-  }, [dispatch]);
+  }, []);
 
 
-  return <div className="App">
-    <Container>
-      <ul>
-        <li><NavLink to="/">Home</NavLink></li>
-        {user
-          ? <>
-            <li>
-              <NavLink to="/profile">
-                <Avatar size={32} />
-                {user.displayName}
-              </NavLink>
-            </li>
-            <li><Link to="#" onClick={logout}>Logout</Link></li>
-          </>
-          : <li><Link to="#" onClick={handleLogin}>Login</Link></li>}
-      </ul>
-    </Container>
-    <Routes>
-      <Route path="*" element={<NotFound />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/profile" element={<Profile />} />
-    </Routes>
-  </div>;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </div>
+    </ThemeProvider>);
 }
 
 export default App;

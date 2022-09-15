@@ -1,5 +1,6 @@
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 import { onAuthStateChanged } from "firebase/auth";
-import { Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { deleteUser, logout } from "../controllers/user.controller";
 import { auth } from "../firebaseConfig";
@@ -17,7 +18,7 @@ const Profile: React.FC = () => {
 
   return (<Container>
     <h1>Your Profile</h1>
-    <p><Button variant="danger" onClick={handleDeleteAccount}>Delete account</Button></p>
+    <p><Button variant="contained" color="error" onClick={handleDeleteAccount}>Delete account</Button></p>
   </Container>);
 }
 
