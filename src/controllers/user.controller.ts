@@ -1,4 +1,5 @@
 import { auth, db, provider } from '../firebaseConfig';
+import { User as AuthUser } from 'firebase/auth';
 import { doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore';
 import User, { UpdateUserPayload } from '../models/user.model';
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -15,9 +16,7 @@ export async function getUserById(id: string): Promise<User | null> {
   return docSnap.data() as User;
 }
 
-export async function createUser(): Promise<User> {
-  const authUser = auth.currentUser;
-  if (!authUser) throw new Error('There is no current User!');
+export async function createUser(authUser: AuthUser): Promise<User> {
   const user = await getUserById(authUser.uid);
   if (user) throw new Error('User already exists!');
   const newUser: User = {
