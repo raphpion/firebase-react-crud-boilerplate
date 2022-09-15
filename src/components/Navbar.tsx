@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import FireplaceIcon from '@mui/icons-material/Fireplace';
 import { useAppSelector } from '../hooks';
 import { login, logout } from '../controllers/user.controller';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
     <AppBar position="static" id="navbar">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <FireplaceIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <NavLink to='/'>
             <Typography
               variant="h6"
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
               ))} */}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <FireplaceIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <NavLink to='/'>
             <Typography
               variant="h5"
