@@ -19,15 +19,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     auth.onAuthStateChanged(async (authUser) => {
-      if (!authUser) {
-        dispatch(setUser(null));
-        return;
-      }
-      let appUser = await getUserById(authUser.uid);
-      if (!appUser) {
-        appUser = await createUser(authUser);
-      }
-      dispatch(setUser(appUser));
+      if (authUser) {
+        let appUser = await getUserById(authUser.uid);
+        if (!appUser) appUser = await createUser(authUser);
+        dispatch(setUser(appUser));
+      } else dispatch(setUser(null));
     });
   }, []);
 
