@@ -8,9 +8,9 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import { CssBaseline, ThemeProvider, Typography, useMediaQuery } from '@mui/material';
-import { getDefaultTheme } from './theme/default.theme';
+import { getDefaultTheme } from './theme/defaultTheme';
+import './theme/defaultTheme.css';
 import Navbar from './components/Navbar';
-import './theme/default.style.css';
 import FireplaceIcon from '@mui/icons-material/Fireplace';
 
 const App: React.FC = () => {
