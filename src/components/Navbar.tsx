@@ -143,8 +143,12 @@ const Navbar: React.FC = () => {
             ? <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="user avatar" src={user !== null && user.photoURL !== null
-                    ? user.photoURL : './assets/avatar-blank.png'} />
+                  <Avatar
+                    alt={user !== null && user.displayName !== null
+                      ? user.displayName
+                      : undefined}
+                    src={user !== null && user.photoURL !== null
+                      ? user.photoURL : './assets/avatar-blank.png'} />
                 </IconButton>
               </Tooltip>
               <Menu
