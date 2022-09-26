@@ -1,4 +1,7 @@
-interface UpdateUserPayload {}
+interface UpdateUserPayload {
+  displayName?: string | null;
+  photoURL?: string | null;
+}
 
 interface User {
   id: string;
