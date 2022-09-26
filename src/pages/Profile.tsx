@@ -60,12 +60,12 @@ const Profile: React.FC = () => {
       onSubmit={(values) => {
         handleUpdateUser(values);
       }}>{() => (<Form>
-        <div><Field
+        <div style={{ marginBottom: 12 }}><Field
           component={TextField}
           name="displayName"
           type="text"
           label="Display Name" /></div>
-        <div><Field
+        <div style={{ marginBottom: 12 }}><Field
           component={TextField}
           name="photoURL"
           type="text"
