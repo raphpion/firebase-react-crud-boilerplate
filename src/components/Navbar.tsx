@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
             <Typography
               variant="h6"
               noWrap
-              component="a"
+              component="span"
               onClick={() => navigate('/')}
               sx={{
                 mr: 2,
@@ -112,7 +112,7 @@ const Navbar: React.FC = () => {
             <Typography
               variant="h5"
               noWrap
-              component="a"
+              component="span"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
