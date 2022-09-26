@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { auth } from './firebaseConfig';
 import { createUser, getUserById } from './controllers/user.controller';
 import { useAppDispatch } from './hooks';
@@ -23,18 +23,15 @@ const App: React.FC = () => {
   const [showSplashPage, setShowSplashPage] = useState(true);
   const [hideSplashPage, setHideSplashPage] = useState(false);
 
-  useEffect(() => {
-    auth.onAuthStateChanged(async (authUser) => {
-      if (authUser) {
-        let appUser = await getUserById(authUser.uid);
-        if (!appUser) appUser = await createUser(authUser);
-        dispatch(setUser(appUser));
-      } else dispatch(setUser(null));
-      setShowSplashPage(false);
-      setTimeout(() => { setHideSplashPage(true) }, 500);
-    });
-  }, []);
-
+  auth.onAuthStateChanged(async (authUser) => {
+    if (authUser) {
+      let appUser = await getUserById(authUser.uid);
+      if (!appUser) appUser = await createUser(authUser);
+      dispatch(setUser(appUser));
+    } else dispatch(setUser(null));
+    setShowSplashPage(false);
+    setTimeout(() => { setHideSplashPage(true) }, 500);
+  });
 
   return (
     <ThemeProvider theme={theme}>
