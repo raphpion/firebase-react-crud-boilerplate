@@ -12,8 +12,6 @@ import { getDefaultTheme } from './theme/default.theme';
 import Navbar from './components/Navbar';
 import './theme/default.style.css';
 import FireplaceIcon from '@mui/icons-material/Fireplace';
-import { } from '@mui/material';
-
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
