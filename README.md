@@ -2,7 +2,7 @@
 
 ![project image](https://repository-images.githubusercontent.com/533463497/7b279ad7-53b7-4c62-b60b-4281f571bdcf)
 
-This project is a boilerplate for CRUD web applications using Firebase, React & Typescript. It was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a boilerplate for CRUD web applications using Firebase, React & Typescript. It was bootstrapped with Create React App.
 
 ## First-time Setup
 
