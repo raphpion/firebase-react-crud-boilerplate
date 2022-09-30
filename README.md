@@ -26,7 +26,7 @@ This project is a boilerplate for CRUD web applications using Firebase, React & 
       "splitTerminals": [
         {
           "name": "emulators",
-          "commands": ["firebase emulators:start --import /saved-data --export-on-exit /saved-data"]
+          "commands": ["firebase emulators:start --import ./saved-data --export-on-exit ./saved-data"]
         }
       ]
     },
